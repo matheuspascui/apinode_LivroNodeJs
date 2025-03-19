@@ -1,7 +1,8 @@
 import express from 'express';
-import routes from 'routes/index.js'
+import routes from '../routes/index.js'
 
 import Home from './controller/Home.js'
+import AppController from './controller/App.js'
 
 const port = process.env.PORT? process.env.PORT : 3000;
 const app = express();
@@ -13,7 +14,12 @@ app.use(express.urlencoded({extended: true}));
 // Using the Routes object (external module created to organize all the routes)
 app.use(routes);
 
+// In this example, the route only declares the ENDPOINT, delegating the responsibility for the processing to another function
+// in our case, another method, called Home, imported through controller/Home.js
 app.get('/', Home.index);
+
+app.use(AppController.notFound);
+app.use(AppController.handleError);
 
 export default app;
 
@@ -42,7 +48,7 @@ app.use((err, req, res, next) => {
     res.status(err.status || 500).json({err: err.message});
 });
 
-
-app.listen(port, () => console.log(`\nServer is running on port ${port}...\n`));
+//LISTENER FOI RETIRADO PARA UM ARQUIVO INDIVIDUAL E ESPECIALIZADO PARA REFATORAR COM MELHORIAS
+//app.listen(port, () => console.log(`\nServer is running on port ${port}...\n`));
 
 
